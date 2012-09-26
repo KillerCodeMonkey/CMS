@@ -1,0 +1,17 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <div id="content_wrapper">
+            {if $LoggedIn == 0}
+            <div id="loginbox">
+                <form action="?authentication&p=index&m=login" method="POST">
+                    <label>Login (UserName oder EMail)</label><input type="text" name="login" />
+                    <label>Passwort</label><input type="password" name="pw" />
+                    <input type="submit" name="login" value="login" />
+                </form>
+                <a href="?authentication&p=registration" title="Registrierung">registrieren</a>
+                <a href="?authentication&p=lostpassword" title="Passwort vergessen">Passwort vergessen</a>
+            </div>
+            {/if}
+        

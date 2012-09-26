@@ -1,0 +1,86 @@
+<?php
+require_once("../config.php");
+
+class DB {
+
+    private $connection;
+    
+    public function __construct() {
+        $this->openConnection();
+    }
+    
+        public function __destruct() {
+        $this->closeConnection();
+    }
+    
+    public function openConnection() {
+        $this->connection = mysql_connect(DB_SERVER, DB_USER, DB_PASS); 
+        if (!$this->connection) { 
+             die("Can not establish connection: " . mysql_error());
+        }
+        $db_selected = mysql_select_db(DB_NAME, $link);
+        if (!$db_selected) {
+            die ('Can not connect database '. DB_NAME .': ' . mysql_error());
+        }
+    }
+    
+    public function closeConnection() { 
+        if(isset($this->connection)) { 
+            mysql_close($this->connection); 
+            unset($this->connection); 
+        } 
+    }
+    
+    public function GetObject($result, $className){
+        return mysql_fetch_object($result, $className);
+    }
+
+    public function GetArray($result){
+        return mysql_fetch_array($result);
+    } 
+      
+    public function query($sql) { 
+        $this->last_query= $sql; 
+        $result = mysql_query($sql, $this->connection); 
+        $this->confirm_query($result); 
+        return $result; 
+    } 
+    
+    private function checkQuery($result) { 
+        if(!$result) { 
+            $output = "Database query failed: " . mysql_error() . "<br /><br />"; 
+            $output .= "Last Sql query: " . $this->last_query; 
+            die( $output ); 
+        } 
+    } 
+      
+    public function escapeValue( $value ) { 
+          
+        if( $this->new_enough_php ) { 
+            if( $this->magic_quotes_active ) { $value = stripslashes($value); } 
+            $value = mysql_real_escape_string( $value ); 
+        } else { 
+            if (!$this->magic_quotes_active) {$value = addslashes( $value ); } 
+        }
+        return $value; 
+    } 
+     
+    public function numRows($result_set) { 
+        return mysql_num_rows($result_set); 
+    } 
+      
+    public function insertID() { 
+        return mysql_insert_id($this->connection); 
+    } 
+      
+    public function affectedRows() { 
+        return mysql_affected_rows($this->connection); 
+    }
+    
+    public function getConnection() {
+        return $this->connectino;
+    }
+    
+}
+
+?>

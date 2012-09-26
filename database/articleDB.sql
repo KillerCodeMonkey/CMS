@@ -1,0 +1,7 @@
+CREATE TABLE  `test`.`article` (
+`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`title` VARCHAR( 255 ) NOT NULL ,
+`text` TEXT NOT NULL ,
+`date` TIMESTAMP NOT NULL ,
+`author` INT( 11 ) NOT NULL
+) ENGINE = INNODB;
