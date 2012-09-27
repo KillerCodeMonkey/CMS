@@ -1,5 +1,5 @@
 <?php
-require_once("../config-php");
+require_once(__DIR__."/../config.php");
 
 class DBH {
     
@@ -7,7 +7,7 @@ class DBH {
     
     public function __construct() {
         try {
-            $this->$dbh = new PDO(DB_TYPE.':host='.DB_SERVER.';dbname='.DB_NAME, DB_USER, DB_PASSWORD);
+            $this->dbh = new PDO(DB_TYPE.':host='.DB_SERVER.';dbname='.DB_NAME, DB_USER, DB_PASS);
         }
         catch (PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";

@@ -1,14 +1,18 @@
 <?php
-require_once("/dbh.php");
-require_once("../functions/session.inc.php");
-require_once("../functions/core.inc.php");
+require_once(__DIR__."/dbh.php");
+require_once(__DIR__."/../functions/session.inc.php");
+require_once(__DIR__."/../functions/core.inc.php");
 
 class User {
 
     private $UserName, $Rank, $ID, $EMail, $Salt;
-    private $DBH = new DBH();
+    private $DBH;
     
-    StartSecureSession();
+    public function __construct(){
+        StartSecureSession();
+        $this->DBH = new DBH();
+    }
+    
 
     public function getID () {
         return $this->ID;
@@ -94,7 +98,7 @@ class User {
             $Stmnt->bindParam(':username', $UserName, PDO::PARAM_STR);
             $Stmnt->bindParam(':pw', $PW, PDO::PARAM_STR);
             $Stmnt->exec();
-            return true if($Count->fetchColumn() == 1);
+            return ($Count->fetchColumn() == 1) ? true : false;
         }
         if($this->getUserByEMail($EMailOrUserName)) {
             $PW = SecureString($PW,$this->Salt);
@@ -102,7 +106,7 @@ class User {
             $Stmnt->bindParam(':username', $UserName, PDO::PARAM_STR);
             $Stmnt->bindParam(':pw', $PW, PDO::PARAM_STR);
             $Stmnt->exec();
-            return true if($Stmnt->fetchColumn() == 1);
+            return ($Stmnt->fetchColumn() == 1) ? true : false;
         }
         return false;
     }
@@ -151,7 +155,7 @@ class User {
                 $result = $Stmnt->fetch(PDO::FETCH_ASSOC);
                 
                 $UserLoginString = hash('sha512', $result['password'].$IPAddress.$UserBrowser);
-                return true if($SessionLoginString == $LoginString);
+                return ($SessionLoginString == $LoginString) ? true : false;
             } 
         }
         return false;

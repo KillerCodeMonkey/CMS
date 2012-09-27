@@ -9,7 +9,9 @@
     }
     
     function SecureString($String, $Salt='') {
-        $Salt = GenerateSalt() if $Salt != '';
+        if($Salt != '') {
+            $Salt = GenerateSalt();
+        }
         $SecureString = base64_encode(hash_hmac('sha256', $String, $Salt, true));
         
         return array('SecureString' => $SecureString, 'Salt' => $Salt);

@@ -1,15 +1,16 @@
 <?php
 
-require_once('../view/Smarty.class.php');
+require_once(__DIR__.'/../view/Smarty.class.php');
 
 /**
  * This controller routes all incoming requests to the appropriate controller
  */
+ 
 //Automatically includes files containing classes that are called
-function __autoload($className)
-{
+spl_autoload_register(function ($className) {
+     echo 'test';
 	//compose file name
-	$file = '../model/' . strtolower($className) . '.php';
+	$file = __DIR__.'../model/' . strtolower($className) . '.php';
 	
 	//fetch file
 	if (file_exists($file))
@@ -22,22 +23,23 @@ function __autoload($className)
 		//file does not exist!
 		die("File '$className' containing class '$className' not found.");	
 	}
-}
+});
 
 $Smarty = new Smarty;
 
 //$smarty->force_compile = true;
-$smarty->debugging = true;
-$smarty->caching = true;
-$smarty->cache_lifetime = 120;
+$Smarty->debugging = true;
+$Smarty->caching = true;
+$Smarty->cache_lifetime = 120;
 
-$User = new User;
+$User = new User();
 
-if($User->getCurrentUser && defined('USER')) {
-    if (USER->getID() != $User->getID) {
-        define('USER',$User);
+if($User->getCurrentUser() && defined('USER')) {    
+    $UserID = $User->getID();
+    if ($UserID != USER) {
+        define('USER',$UserID);
     }
-    $Smarty->assign('CurrentUser', USER);
+    $Smarty->assign('CurrentUser', $User);
     $Smarty->assign('LoggedIn', 1);
 } else {
     define('USER', null);
@@ -49,6 +51,7 @@ $request = $_SERVER['QUERY_STRING'];
 
 //parse the page request and other GET variables
 $parsed = explode('&' , $request);
+print_r($parsed);
 
 //the page is the first element
 $page = array_shift($parsed);
@@ -63,7 +66,7 @@ foreach ($parsed as $argument)
 }
 
 //compute the path to the file
-$target = '../controller/' . $page . '.php';
+$target = __DIR__.'/../controller/' . $page . '.php';
 
 //get target
 if (file_exists($target))
@@ -92,5 +95,5 @@ else
 
 //once we have the controller instantiated, execute the default function
 //pass any GET varaibles to the main method
-$controller->main($getVars);
+$controller->main($getVars, $Smarty);
 ?>
