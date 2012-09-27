@@ -3,7 +3,11 @@
 class UserController {
     
     private $UserActions = array('ViewUser');
-    private $CurrentUser = new User;
+    private $CurrentUser;
+    
+    public function __construct(){
+        $this->CurrentUser = new User();
+    }
     
     public function main ($hVars) {
         

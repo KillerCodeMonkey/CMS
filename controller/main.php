@@ -8,7 +8,6 @@ require_once(__DIR__.'/../view/Smarty.class.php');
  
 //Automatically includes files containing classes that are called
 spl_autoload_register(function ($className) {
-     echo 'test';
 	//compose file name
 	$file = __DIR__.'/../model/' . strtolower($className) . '.php';
 	
@@ -48,10 +47,9 @@ if($User->getCurrentUser() && defined('USER')) {
 	
 //fetch the passed request
 $request = $_SERVER['QUERY_STRING'];
-
+print_r($_SERVER['QUERY_STRING']);
 //parse the page request and other GET variables
 $parsed = explode('&' , $request);
-print_r($parsed);
 
 //the page is the first element
 $page = array_shift($parsed);
@@ -61,7 +59,7 @@ $getVars = array();
 foreach ($parsed as $argument)
 {
 	//split GET vars along '=' symbol to separate variable, values
-	list($variable , $value) = split('=' , $argument);
+	list($variable , $value) = preg_split('/=/' , $argument);
 	$getVars[$variable] = $value;
 }
 
@@ -74,7 +72,7 @@ if (file_exists($target))
 	include_once($target);
 	
 	//modify page to fit naming convention
-	$class = ucfirst($page) . Controller;
+	$class = ucfirst($page) . 'Controller';
 	
 	//instantiate the appropriate class
 	if (class_exists($class))
@@ -90,7 +88,7 @@ if (file_exists($target))
 else
 {
 	//can't find the file in 'controllers'! 
-	die('page does not exist!');
+	die('page does not exist!'.$_SERVER['QUERY_STRING']);
 }
 
 //once we have the controller instantiated, execute the default function

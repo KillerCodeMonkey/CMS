@@ -1,20 +1,20 @@
 <?php
-require_once("/dbh.php");
-require_once("../funtions/session.inc.php");
+require_once(__DIR__."/dbh.php");
+require_once(__Dir__."/../model/user.php");
+require_once(__DIR__."/../functions/session.inc.php");
 
 class Authentication {
 
-    private $DBH = new DBH();
-    
-    StartSecureSession();
+    private $DBH;
 
     public function __construct() {
+        StartSecureSession();	
+        $this->DBH = new DBH();
     }
     
-    public function registerUser($EMail, $UserName, $PW, $PW2, $Rank) {
-        if(strlen($EMail) > 0 && strlen($UserName) > 0 && strlen($PW) > 0 && strlen($PW) == strlen($PW2) && isset($Rank)) {
-            $Rank = new Rank();
-            $Rank->getRankByID($Rank);
+    public function registerUser($EMail, $UserName, $PW, $PW2) {
+        if(strlen($EMail) > 0 && strlen($UserName) > 0 && strlen($PW) > 0 && strlen($PW) == strlen($PW2)) {
+            
             $User = new User();
             if(!$User->getUserByEMail($EMail) && !$User->getUserByUserName($UserName)) {
                 $hSecurePW = SecureString($PW);
@@ -25,7 +25,7 @@ class Authentication {
                     $Stmt->bindParam(':email',$EMAIL, PDO::PARAM_STR);
                     $Stmt->bindParam(':pw',$hSecurePW['SecureString'], PDO::PARAM_STR);
                     $Stmt->bindParam(':salt',$hSecurePWp['Salt'], PDO::PARAM_STR);
-                    $Stmt->bindParam(':rank',$Rank, PDO::PARAM_INT);
+                    $Stmt->bindParam(':rank',1, PDO::PARAM_INT);
                     $Stmt->execute();
                     $this->dbh->commit();
                     return $User->getUserByUserName($UserName);
