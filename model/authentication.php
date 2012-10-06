@@ -7,8 +7,7 @@ class Authentication {
 
     private $DBH;
 
-    public function __construct() {
-        StartSecureSession();	
+    public function __construct() {	
         $this->DBH = new DBH();
     }
     
@@ -39,6 +38,8 @@ class Authentication {
     }
 
     public function login ($EMailOrUserName, $PW) {
+		DestroySession();
+		StartSession();
         // Using prepared Statements means that SQL injection is not possible. 
         $User = new User();
         if($User->getUserForLogin($EMailOrUserName, $PW)) {

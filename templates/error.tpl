@@ -1,7 +1,3 @@
 {include file="header.tpl" title=$Title}
-
-Startseite!
-{if $LoggedIn == 0}
-<a href="login">haha</a>
-{/if}
+{$Msg}
 {include file="footer.tpl"}

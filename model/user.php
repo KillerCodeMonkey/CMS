@@ -1,6 +1,5 @@
 <?php
 require_once(__DIR__."/dbh.php");
-require_once(__DIR__."/../functions/session.inc.php");
 require_once(__DIR__."/../functions/core.inc.php");
 
 class User {
@@ -9,7 +8,6 @@ class User {
     private $DBH;
     
     public function __construct(){
-        StartSecureSession();
         $this->DBH = new DBH();
     }
     

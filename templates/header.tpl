@@ -1,5 +1,6 @@
 <html>
     <head>
+        <title>{$title|default:"Hey HO"}</title>
     </head>
     <body>
         <div id="content_wrapper">
